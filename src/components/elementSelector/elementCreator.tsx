@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import {
   Alert,
   AlertIcon,
@@ -89,7 +90,7 @@ export function ElementCreator<T>(props: ElementCreatorProps<T>) {
       setState({ focusAssigned: false });
     } else {
     }
-  }, [isOpen]);
+  }, [isOpen, setState]);
 
   React.createElement;
 

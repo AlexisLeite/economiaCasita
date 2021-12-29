@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/display-name */
 import { Grid, Box, VStack } from "@chakra-ui/layout";
 import * as React from "react";
 import { useMergedState } from "../utils/mergedStatus";
@@ -169,7 +171,7 @@ const AssetsUploader = React.forwardRef<HTMLDivElement, IUploadProps>(
             });
           },
         });
-    }, []);
+    }, [props, state.eventEmitter]);
 
     React.useEffect(() => {
       function handleEmit() {
@@ -251,8 +253,8 @@ const AssetsUploader = React.forwardRef<HTMLDivElement, IUploadProps>(
               w="100%"
               gap={10}
             >
-              {state.images.map((image) => (
-                <img src={image.src} />
+              {state.images.map((image, i) => (
+                <img src={image.src} key={i} alt="" />
               ))}
             </Grid>
             {state.uploading && (
