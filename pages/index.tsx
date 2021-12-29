@@ -16,7 +16,7 @@ import { mutate } from "../src/api/operations";
 import AssetsUploader, {
   AssetsUploaderControl,
 } from "../src/components/assetsUploader";
-import { useMergedState } from "../src/util/mergedStatus";
+import { useMergedState } from "../src/utils/mergedStatus";
 import styles from "../styles/Home.module.css";
 
 interface IState {

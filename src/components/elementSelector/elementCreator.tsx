@@ -20,9 +20,9 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
-import Key from "../../util/key";
-import { useMergedState } from "../../util/mergedStatus";
-import { Unsuscribe } from "../../util/suscribers";
+import Key from "../../utils/key";
+import { useMergedState } from "../../utils/mergedStatus";
+import { Unsuscribe } from "../../utils/suscribers";
 import { Picker } from "./elementSelector";
 import { ElementCreatorProps, ElementCreatorStateInterface } from "./types";
 

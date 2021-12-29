@@ -1,8 +1,8 @@
 import { Grid, Box, VStack } from "@chakra-ui/layout";
 import * as React from "react";
-import { useMergedState } from "../util/mergedStatus";
+import { useMergedState } from "../utils/mergedStatus";
 import { Button, Input, Progress } from "@chakra-ui/react";
-import EventEmitter from "../util/eventEmitter";
+import EventEmitter from "../utils/eventEmitter";
 import { authToken, gql, graphcms } from "../api/api";
 
 export type UploadImage = { file?: File; name?: string; type?: string };

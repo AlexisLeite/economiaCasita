@@ -11,9 +11,9 @@ import {
 } from "@chakra-ui/modal";
 import { Table, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/table";
 import * as React from "react";
-import { useMergedState } from "../../util/mergedStatus";
-import Key from "../../util/key";
-import { Unsuscribe } from "../../util/suscribers";
+import { useMergedState } from "../../utils/mergedStatus";
+import Key from "../../utils/key";
+import { Unsuscribe } from "../../utils/suscribers";
 import {
   ElementCreatorProps,
   ElementPickerProps,
@@ -30,7 +30,7 @@ import { Box } from "@chakra-ui/react";
 import {
   focusNextElement,
   focusPreviousElement,
-} from "../../util/focusControl";
+} from "../../utils/focusControl";
 
 /*
  
