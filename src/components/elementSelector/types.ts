@@ -1,5 +1,5 @@
-import { Emitter } from '../../eventEmitter';
-import { defaultConf } from './elementSelector';
+import { Emitter } from "../../utils/eventEmitter";
+import { defaultConf } from "./elementSelector";
 
 export type PickerProps<Type> = {
   onChange: (value: Type) => void;
@@ -15,7 +15,7 @@ export type Renderer<Type> = React.FunctionComponent<RendererProps<Type>>;
 export type FieldDefinition<Type> = {
   required?: boolean;
   message?: string;
-  picker?: Picker<Type> | 'self';
+  picker?: Picker<Type> | "self";
   renderer?: Renderer<Type>;
   validator?: (value: Type) => string | true;
 };
@@ -30,7 +30,9 @@ export type SelectionRendererProps<T> = {
   currentSelection: ObjectOf<T>[];
 };
 
-export type SelectionRenderer<T> = (props: SelectionRendererProps<T>) => React.ReactElement;
+export type SelectionRenderer<T> = (
+  props: SelectionRendererProps<T>
+) => React.ReactElement;
 export type TypeMap = Record<string, any>;
 
 // Creator
@@ -68,7 +70,8 @@ export type IsMultipleDefinition<T> =
       value?: { [K in keyof T]: T[K] }[] | null;
     };
 
-export type ElementPickerProps<T> = IsMultipleDefinition<T> & {} & ElementCreatorProps<T>;
+export type ElementPickerProps<T> =
+  IsMultipleDefinition<T> & {} & ElementCreatorProps<T>;
 
 export type ElementPickerState<T> = {
   elements: ObjectOf<T>[];

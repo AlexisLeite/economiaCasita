@@ -3,7 +3,7 @@ type EventKey<T extends EventMap> = string & keyof T;
 type EventReceiver<T> = (params: T) => void;
 type fun = () => void;
 
-interface Emitter<T extends EventMap> {
+export interface Emitter<T extends EventMap> {
   on<K extends EventKey<T>>(eventName: K, fn: EventReceiver<T[K]>): fun;
   off<K extends EventKey<T>>(eventName: K, fn: EventReceiver<T[K]>): void;
   emit<K extends EventKey<T>>(eventName: K, params: T[K]): void;
