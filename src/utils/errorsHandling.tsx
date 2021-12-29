@@ -11,6 +11,7 @@ export function ErrorSignal() {
   }, []);
   return error ? (
     <div
+      title="An error ocurred"
       style={{
         height: "10px",
         width: "10px",
@@ -19,7 +20,6 @@ export function ErrorSignal() {
         position: "fixed",
         borderRadius: "100%",
         background: "red",
-        title: "An error ocurred",
         zIndex: 150000,
       }}
     ></div>
