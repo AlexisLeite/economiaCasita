@@ -135,7 +135,7 @@ export function Picker<T extends TypeMap>(props: ElementPickerProps<T>) {
     }
 
     return Unsuscribe(...unsuscribers);
-  }, [state, isOpen]);
+  }, [state, isOpen, props.retrieve, setState]);
 
   // Set the focus when the modal is opened or when the focus changes
   React.useEffect(() => {
@@ -159,7 +159,7 @@ export function Picker<T extends TypeMap>(props: ElementPickerProps<T>) {
 
       setState({ selectedItems: value });
     }
-  }, [props.value, state.elements, props.Key]);
+  }, [props.value, state.elements, props.Key, setState]);
 
   return (
     <>
