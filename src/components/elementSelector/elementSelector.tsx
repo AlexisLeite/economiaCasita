@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
 import {
@@ -135,7 +136,7 @@ export function Picker<T extends TypeMap>(props: ElementPickerProps<T>) {
     }
 
     return Unsuscribe(...unsuscribers);
-  }, [state, isOpen, props.retrieve, setState]);
+  }, [state, isOpen, props.retrieve]);
 
   // Set the focus when the modal is opened or when the focus changes
   React.useEffect(() => {
@@ -159,7 +160,7 @@ export function Picker<T extends TypeMap>(props: ElementPickerProps<T>) {
 
       setState({ selectedItems: value });
     }
-  }, [props.value, state.elements, props.Key, setState]);
+  }, [props.value, state.elements, props.Key]);
 
   return (
     <>

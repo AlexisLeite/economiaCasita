@@ -19,6 +19,7 @@ import AssetsUploader, {
 } from "../src/components/assetsUploader";
 import { useMergedState } from "../src/utils/mergedStatus";
 import styles from "../styles/Home.module.css";
+import { useLoginContext } from "./_app";
 
 interface IState {
   // Control
@@ -49,18 +50,20 @@ const Home: NextPage = () => {
   const [state, originalMergeState, setState] =
     useMergedState<IState>(initialState);
   const uploaderRef = React.useRef<HTMLDivElement>(null);
+  const { author } = useLoginContext();
 
   const mergeState = (mergeState: Partial<IState>) => {
     if (!("error" in mergeState)) mergeState.error = null;
     originalMergeState(mergeState);
   };
-  void React.useEffect(() => {
-    if (state.createProcessStarted || !state.uploading) return;
+
+  React.useEffect(() => {
+    if (!state.uploading) return;
+    console.log("useeffect");
     if (!state.concept || !state.amount) {
       mergeState({ uploading: false, error: "Faltan datos" });
       return;
     }
-
     async function fetch() {
       if (uploaderRef.current) {
         // It is an expense
@@ -75,6 +78,7 @@ const Home: NextPage = () => {
             concept: state.concept!,
             date: new Date().toISOString(),
             image: state.imageId,
+            author,
           });
         } else {
           // There is no image
@@ -82,6 +86,7 @@ const Home: NextPage = () => {
             amount: state.amount!,
             concept: state.concept!,
             date: new Date().toISOString(),
+            author,
           });
         }
       } else {
@@ -89,6 +94,7 @@ const Home: NextPage = () => {
         await mutate.incomes.create({
           amount: state.amount!,
           concept: state.concept!,
+          author,
         });
       }
       setState(initialState);
@@ -103,8 +109,6 @@ const Home: NextPage = () => {
     state.concept,
     state.amount,
   ]);
-
-  console.log({ state });
 
   return (
     <div>
@@ -143,7 +147,7 @@ const Home: NextPage = () => {
               <Input
                 required
                 disabled={state.uploading}
-                placeholder="Costo"
+                placeholder="Valor"
                 pattern="^[\d]+(?:\.?\d+)$"
                 title="Debe ser un número"
                 onChange={(ev) => {
@@ -170,12 +174,15 @@ const Home: NextPage = () => {
                 ref={uploaderRef}
                 kind="small"
                 onChange={([imageId]) => {
+                  console.log("onChange");
                   mergeState({ imageId });
                 }}
                 onSelect={() => {
+                  console.log("onSelect");
                   mergeState({ imageSelected: true });
                 }}
                 getControl={({ start }) => {
+                  console.log("getControl");
                   mergeState({ start });
                 }}
               />

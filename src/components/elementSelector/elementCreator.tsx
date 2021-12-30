@@ -90,7 +90,7 @@ export function ElementCreator<T>(props: ElementCreatorProps<T>) {
       setState({ focusAssigned: false });
     } else {
     }
-  }, [isOpen, setState]);
+  }, [isOpen]);
 
   React.createElement;
 

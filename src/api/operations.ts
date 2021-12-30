@@ -2,18 +2,23 @@ import { gql } from "graphql-request";
 import { graphcms } from "./api";
 
 interface Expense {
-  date: string;
+  id: string;
+  date: string | Date;
   concept: string;
   amount: number;
   image?: string;
+  author: string;
 }
 interface Income {
+  id: string;
   amount: number;
   concept: string;
+  author: string;
+  createdAt: Date;
 }
 
 const expenseMutations = {
-  create: async function (data: Expense) {
+  create: async function (data: Omit<Expense, "id">) {
     const {
       createExpense: { id },
     } = await graphcms.request(
@@ -29,7 +34,8 @@ const expenseMutations = {
           concept: data.concept,
           amount: data.amount,
           date: data.date,
-          ...(data.date
+          author: data.author,
+          ...(data.image
             ? {
                 image: {
                   connect: {
@@ -55,7 +61,7 @@ const expenseMutations = {
 };
 
 const incomeMutations = {
-  create: async function (data: Income) {
+  create: async function (data: Omit<Income, "id" | "createdAt">) {
     const {
       createIncome: { id },
     } = await graphcms.request(
@@ -123,23 +129,17 @@ type IncomeOrder =
   | "concept_DESC";
 export const query = {
   expenses: {
-    async all({
-      skip = 0,
-      orderBy = "date_DESC",
-      first = 10,
-    }: QueryParameters<ExpensesOrder>): Promise<{
-      id: string;
-      concept: string;
-      amount: number;
-      image: string;
-      date: Date;
-    }> {
+    async all(
+      { skip, first, orderBy }: QueryParameters<ExpensesOrder> = {
+        skip: 0,
+        orderBy: "date_DESC",
+        first: 10,
+      }
+    ): Promise<(Omit<Expense, "date"> & { date: Date })[]> {
       const {
-        id,
-        concept,
-        date,
-        amount,
-        image: { url: image },
+        expenses,
+      }: {
+        expenses: (Omit<Expense, "image"> & { image?: { url: string } })[];
       } = await graphcms.request(gql`
         query {
           expenses(skip: ${skip}, orderBy: ${orderBy}, first: ${first}) {
@@ -147,6 +147,7 @@ export const query = {
             concept
             amount
 						date
+            author
             image {
               url
             }
@@ -154,31 +155,28 @@ export const query = {
         }
       `);
 
-      return {
-        id,
-        concept,
-        amount: parseInt(amount),
-        image,
-        date: new Date(date),
-      };
+      return expenses.map((expense) => ({
+        author: expense.author,
+        id: expense.id,
+        concept: expense.concept,
+        amount: expense.amount,
+        image: expense.image ? expense.image.url : undefined,
+        date: new Date(expense.date),
+      }));
     },
   },
   incomes: {
-    async all({
-      skip = 0,
-      orderBy = "createdAt_DESC",
-      first = 10,
-    }: QueryParameters<IncomeOrder>): Promise<{
-      id: string;
-      concept: string;
-      amount: number;
-      date: Date;
-    }> {
+    async all(
+      { skip, first, orderBy }: QueryParameters<IncomeOrder> = {
+        skip: 0,
+        orderBy: "createdAt_DESC",
+        first: 10,
+      }
+    ): Promise<(Omit<Income, "createdAt"> & { date: Date })[]> {
       const {
-        id,
-        concept,
-        amount,
-        createdAt: date,
+        incomes,
+      }: {
+        incomes: Income[];
       } = await graphcms.request(gql`
         query {
           incomes(skip: ${skip}, orderBy: ${orderBy}, first: ${first}) {
@@ -186,11 +184,18 @@ export const query = {
             concept
             amount
 						createdAt
+            author
           }
         }
       `);
 
-      return { id, concept, amount: parseInt(amount), date: new Date(date) };
+      return incomes.map((income) => ({
+        author: income.author,
+        id: income.id,
+        concept: income.concept,
+        amount: income.amount,
+        date: new Date(income.createdAt),
+      }));
     },
   },
 };

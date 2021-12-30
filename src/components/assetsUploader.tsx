@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/display-name */
 import { Grid, Box, VStack } from "@chakra-ui/layout";
@@ -171,7 +172,7 @@ const AssetsUploader = React.forwardRef<HTMLDivElement, IUploadProps>(
             });
           },
         });
-    }, [props, state.eventEmitter]);
+    }, []);
 
     React.useEffect(() => {
       function handleEmit() {
