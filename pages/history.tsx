@@ -5,8 +5,8 @@ import { query } from "../src/api/operations";
 interface Props {}
 
 export default function History({}: Props): ReactElement {
-  const [history, setHistory] = React.useState<
-    (
+  const [state, setState] = React.useState<{
+    history: (
       | {
           id: string;
           date: Date;
@@ -24,36 +24,60 @@ export default function History({}: Props): ReactElement {
           date: Date;
           kind: string;
         }
-    )[]
-  >();
+    )[];
+    total: number;
+  }>();
+
   React.useEffect(() => {
     async function fetch() {
-      const expenses = await query.expenses.all();
-      const incomes = await query.incomes.all();
+      const expenses = await query.expenses.all({
+        where: `createdAt_gte: "${new Date(
+          Date.now() - 1000 * 60 * 60 * 24 * 5
+        ).toISOString()}"`,
+      });
+      const incomes = await query.incomes.all({
+        where: `createdAt_gte: "${new Date(
+          Date.now() - 1000 * 60 * 60 * 24 * 5
+        ).toISOString()}"`,
+      });
       const history = [
         ...expenses.map((expense) => ({ kind: "Expense", ...expense })),
         ...incomes.map((income) => ({ kind: "Income", ...income })),
       ].sort((a, b) => (a.date < b.date ? 1 : -1));
-      setHistory(history);
+      const total = await query.total();
+      setState({ history, total });
     }
     fetch();
   }, []);
 
+  if (!state?.history)
+    return (
+      <Container maxW="container.sm">
+        <Heading size="md">Cargando...</Heading>
+      </Container>
+    );
+
+  const { history, total } = state;
+
   return (
     <Container maxW="container.sm">
-      {!history && <Heading size="md">Cargando...</Heading>}
       {history && history.length === 0 && (
         <Heading size="md">No hay nada para mostrar</Heading>
       )}
       {history &&
         history.length > 0 &&
         history.map((transaction) => {
+          const sx =
+            transaction.concept === "Redondeo"
+              ? { background: "red", padding: 2, color: "white" }
+              : {};
           return (
             <HStack key={transaction.id}>
               <Heading
                 size="md"
                 flexBasis="100%"
                 textAlign={transaction.kind === "Expense" ? "right" : "left"}
+                sx={sx}
               >
                 <Box as="span" sx={{ color: "#4ab44a" }}>
                   [{transaction.author.charAt(0).toUpperCase()}]
@@ -97,13 +121,7 @@ export default function History({}: Props): ReactElement {
           mt: 10,
         }}
       >
-        Total:{" "}
-        {history?.reduce((prev, current) => {
-          return (
-            prev +
-            (current.kind === "Income" ? current.amount : current.amount * -1)
-          );
-        }, 0)}
+        Total: {total}
       </Heading>
     </Container>
   );

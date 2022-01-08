@@ -46,6 +46,10 @@ const initialState = {
   currentOperation: null,
 };
 
+function noisNaN(test: number) {
+  return Number.isNaN(test) ? 0 : test;
+}
+
 const Home: NextPage = () => {
   const [state, originalMergeState, setState] =
     useMergedState<IState>(initialState);
@@ -151,7 +155,7 @@ const Home: NextPage = () => {
                 pattern="^[\d]+(?:\.?\d+)$"
                 title="Debe ser un número"
                 onChange={(ev) => {
-                  mergeState({ amount: parseFloat(ev.target.value) });
+                  mergeState({ amount: noisNaN(parseFloat(ev.target.value)) });
                 }}
                 value={state.amount ?? ""}
               />

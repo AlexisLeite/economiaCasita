@@ -36,6 +36,16 @@ export default function Nav({}: Props): ReactElement | null {
       <NextLink passHref href="/history">
         <Link sx={linksSx}>Historial</Link>
       </NextLink>
+      <NextLink passHref href="/fix">
+        <Link
+          color="white"
+          fontWeight="bold"
+          background="green.600"
+          sx={linksSx}
+        >
+          Fix
+        </Link>
+      </NextLink>
       <Button
         sx={{ display: "inline-block", ml: 1 }}
         size="sm"
